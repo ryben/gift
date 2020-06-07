@@ -3,16 +3,24 @@
 <head>
     <title>Gift</title>
 </head>
-<body>
-    <div id="message_container">
-        <p id="message_from" class="message" style=";font-size:25px; font-style: bold;"></p>
-        <p class="message" style="font-size:19px; color: gray;">
-            Click it to open
-        </p>
+<body class="message">
+    <div id="edit_module_container" class="hideDuringLoad center_children" style="text-align: center;">
+        <div id="edit_module" style="text-align: left; display: inline-block;">
+            From <input id="edit_gift_from" class="edit_module_input" type="text"/><br/>
+            To <input id="edit_gift_to" class="edit_module_input" type="text"/><br/>
+            <button onclick="onClickGenerate()" style="margin-top :20px;" class="edit_module_button">Generate link</button><br/>
+            <textarea id="edit_gift_link" class="edit_module_input default_hide" style="resize: none;"/></textarea><br/>
+            <a id="edit_gift_link_test" class="clickable_text default_hide" style="text-align: center;" onclick="onClickTry()">Try it</a>
+        </div>
     </div>
 
-    <div id="treasure_container" style="text-align: center;">
-        <div id="treasure" onclick="onClickChest()">
+    <div id="message_container" class="default_hide">
+        <div id="message_from" class="message" style=";font-size:25px; font-style: bold;">You received a gift!</div>
+        <div class="message" style="font-size:18px; color: gray; margin-top: 10px;">Click it to open</div>
+    </div>
+
+    <div id="treasure_container" class="default_hide center_children">
+        <div id="treasure" class="hideDuringLoad clickable" onclick="onClickChest()">
             <img id="chest_state" class="treasure_element"/>
             <img id="scroll"      class="treasure_element"/>
             <img id="chest_front" class="treasure_element"/>
@@ -20,6 +28,11 @@
         </div>
     </div>
 </body>
+
+<footer class="center_children">
+    <a id="create_gift" class="clickable_text message create_gift default_hide" style="color: darkblue;" onclick="onClickCreateGift()">Create your own gift</a>
+</footer>
+
 </html>
 
 <script type="text/javascript">
@@ -40,30 +53,71 @@
     }
 
     function onLoad() {
-        // Setup message
         var url = new URL(window.location.href);
-        var paramFrom = url.searchParams.get('from');
-        if (paramFrom) {
-            e("message_from").innerHTML  = "You received a gift from " + paramFrom + "!";
+        var paramCreate = url.searchParams.get('create');
+
+        if (paramCreate != null) { // If creating gift
+            e("edit_module_container").style.display = "block";
+
+            if (getParamFrom() != null) {
+                e("edit_gift_from").value = getParamFrom();
+                e("edit_gift_to").focus();
+            } else {
+                e("edit_gift_from").focus();
+            }
+
+        } else {
+            e("edit_module_container").style.display = "none";
+            loadMessage();  
+            loadTreasure();
+            loadFooter();
+        }
+    }
+
+    function getParamFrom() {
+        var url = new URL(window.location.href);
+        return url.searchParams.get('from');
+    }
+
+    function getParamTo() {
+        var url = new URL(window.location.href);
+        return url.searchParams.get('to');
+    }
+
+    function loadMessage() {
+        if (getParamFrom()) {
+            e("message_from").innerHTML  = "You received a gift from " + getParamFrom() + "!";
         } else {
             e("message_from").innerHTML  = "You received a gift!";
         }
 
-        var paramTo = url.searchParams.get('to');
-        if (paramTo) {
-            e("chest_text").innerHTML = paramTo
-        } else if (paramFrom) {
-            e("chest_text").innerHTML = "From " + paramFrom;
+        if (getParamTo()) {
+            e("chest_text").innerHTML = getParamTo();
+        } else if (getParamFrom()) {
+            e("chest_text").innerHTML = "From " + getParamFrom();
         } else {
             e("chest_text").innerHTML = ""
         }
 
-        // Setup treasure
+        show("message_container");
+    }
+
+    function loadTreasure() {
         e("chest_state").src = img(chest_closed);
         e("chest_front").src = img(chest_front);
         e("scroll").style.display = "none";
         e("scroll").src = img(scroll);
         e("treasure").style.display = "inline-block";
+
+        show("treasure_container");
+    }
+
+    function loadFooter() {
+        show("create_gift");
+    }
+
+    function show(elementId) {
+        e(elementId).style.display = "block";
     }
 
     function onClickChest() {
@@ -71,6 +125,49 @@
         e("scroll").style.display = "inline";
         e("scroll").style.transitionDuration = "2s";
         e("scroll").classList.add("translateUp");
+    }
+
+
+    function getBaseLocation() {
+        return window.location.protocol + '//' + window.location.host + window.location.pathname;
+    }
+
+    function onClickCreateGift() {
+        var url = new URL(window.location.href);
+
+        var params = {"create" : ""}
+
+        // add in recipient for easier input for the user
+        var recipient = getParamTo();
+        if (recipient) {
+            params["from"] = recipient;
+        }
+
+        var createGiftParam = getBaseLocation() + "?" + encodeQuery(params);
+
+        window.location.replace(createGiftParam);
+    }
+
+
+    function onClickGenerate() {
+        const params = { "from": e("edit_gift_from").value, "to": e("edit_gift_to").value};
+
+        var giftLink = getBaseLocation() + "?" + encodeQuery(params);;
+        e("edit_gift_link").value = giftLink;
+
+        show("edit_gift_link")
+        show("edit_gift_link_test")
+    }
+
+    function onClickTry() {
+        window.open(e("edit_gift_link").value);
+    }
+
+    function encodeQuery(params) {
+       const ret = [];
+       for (let d in params)
+         ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(params[d]));
+       return ret.join('&');
     }
 </script>
 
@@ -90,6 +187,10 @@
         margin-bottom: 90px;
     }
 
+    .hideDuringLoad, .default_hide{
+        display: none;
+    }
+
     .message {
         font-family:Comic Sans MS, cursive, sans-serif;
     }
@@ -100,14 +201,17 @@
     }
 
     #treasure {
-        display: none; /* hide while loading */
         height: 300px;
         width: 300px;
         position: relative;
     }
 
-    #treasure:hover {
+    .clickable:hover, .clickable_text:hover {
         cursor: pointer;
+    }
+
+    .clickable_text {
+        color: darkblue;
     }
 
     .treasure_element {
@@ -139,5 +243,40 @@
       -webkit-animation-iteration-count: 1;
       -webkit-animation-timing-function: ease;
       -webkit-animation-fill-mode: forwards;
+    }
+
+    #edit_module {
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        margin: 50px;
+        min-width: 300px;
+        max-width: 500px;
+        padding: 30px;
+        border-radius: 15px;
+    }
+
+    .center_children {
+        text-align: center;
+    }
+
+    .edit_module_input {
+        width: 100%;
+        padding: 12px 20px;
+        margin-top: 4px;
+        margin-bottom: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .edit_module_button {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 </style>
