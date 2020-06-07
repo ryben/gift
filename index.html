@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gift</title>
+</head>
+<body>
+    <div id="message">
+        <p style = "font-family:georgia,garamond,serif;font-size:25px;font-style:bold;">
+            You got a gift from Rey!
+        </p>
+        <p style = "font-family:georgia,garamond,serif;font-size:19px;font-style:italic;color: gray;">
+            Click it to open
+        </p>
+    </div>
+
+    <div id="treasure_container" style="text-align: center;">
+        <div id="treasure" onclick="onClickChest()">
+            <img id="chest_state" class="treasure_element"/>
+            <img id="scroll"      class="treasure_element"/>
+            <img id="chest_front" class="treasure_element"/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    window.onload = onLoad;
+
+    var graphics_folder = "graphics/";
+    var chest_closed = "chest_closed.png";
+    var chest_opened = "chest_opened.png";
+    var chest_front = "chest_front.png";
+    var scroll = "scroll.png";
+
+    function img(filename) { // get image full path
+        return graphics_folder + filename;
+    }
+
+    function e(id) { // get element by id
+        return document.getElementById(id);
+    }
+
+    function onLoad() {
+        // Setup treasure
+        e("chest_state").src = img(chest_closed);
+        e("chest_front").src = img(chest_front);
+        e("scroll").style.display = "none";
+        e("scroll").src = img(scroll);
+        e("treasure").style.display = "inline-block"
+    }
+
+    function onClickChest() {
+        e("chest_state").src = img(chest_opened);
+        e("scroll").style.display = "inline";
+        e("scroll").style.transitionDuration = "2s";
+        e("scroll").classList.add("translateUp");
+    }
+</script>
+
+
+<style>
+    #message {
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 90px;
+    }
+
+    #treasure {
+        display: none; /* hide while loading */
+        height: 300px;
+        width: 300px;
+        position: relative;
+    }
+
+    #treasure:hover {
+        cursor: pointer;
+    }
+
+    .treasure_element {
+        height: 300px;
+        width: 300px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        user-drag: none; 
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;z
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    @-webkit-keyframes cssAnimation {
+      from {
+        -webkit-transform: translateY(0px);
+      }
+      to {
+        -webkit-transform: translateY(-100px);
+      }
+    }
+
+    .translateUp {
+      -webkit-animation-name: cssAnimation;
+      -webkit-animation-duration:7s;
+      -webkit-animation-iteration-count: 1;
+      -webkit-animation-timing-function: ease;
+      -webkit-animation-fill-mode: forwards;
+    }
+</style>
