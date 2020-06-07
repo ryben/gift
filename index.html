@@ -167,7 +167,7 @@
         // add in recipient for easier input for the user
         var recipient = getParamTo();
         if (recipient) {
-            params["from"] = recipient;
+            params["f"] = recipient;
         }
 
         var createGiftParam = getBaseLocation() + "?" + encodeQuery(params);
