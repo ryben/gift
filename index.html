@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
     <title>Gift</title>
@@ -16,7 +16,7 @@
     </div>
 
     <div id="message_container" class="default_hide">
-        <div id="message_from" class="message" style=";font-size:25px; font-style: bold;">You received a gift!</div>
+        <div id="message_from" class="message" style=";font-size:25px; font-weight: bold;">You received a gift!</div>
         <div class="message" style="font-size:18px; color: gray; margin-top: 10px;"></div>
     </div>
 
@@ -30,7 +30,7 @@
     </div>
 
     <div id="footer" class="center_children" style="margin-top: 120px;">
-        <a id="create_gift" class="clickable_text message create_gift default_hide" style="color: darkblue; padding-bottom: 40px;" onclick="onClickCreateGift()">Create your own gift</a>
+        <a id="create_gift" class="clickable_text message create_gift default_hide" style="padding: 20px; font-weight: bold; font-size: 18px;" onclick="onClickCreateGift()">Create your own gift</a>
     </div>
 
 </body>
@@ -207,6 +207,11 @@
         background-size: cover;
     }
 
+    @font-face {
+        font-family: MyPapyrus;
+        src: url("font/papyrus.ttf");
+    }
+
     #message_container {
         text-align: center;
         margin-top: 60px;
@@ -218,11 +223,11 @@
     }
 
     .message {
-        font-family:Comic Sans MS, cursive, sans-serif;
+        font-family:MyPapyrus;
     }
 
     .chest_text {
-        font-family:Papyrus,fantasy;
+        font-family:MyPapyrus, fantasy;
         color: gold;
     }
 
@@ -237,7 +242,8 @@
     }
 
     .clickable_text {
-        color: darkblue;
+        color: blue;
+        font-weight: bold;
     }
 
     .treasure_element {
