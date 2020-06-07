@@ -51,7 +51,7 @@
 
         var paramTo = url.searchParams.get('to');
         if (paramTo) {
-            e("chest_text").innerHTML = "Allan"
+            e("chest_text").innerHTML = paramTo
         } else if (paramFrom) {
             e("chest_text").innerHTML = "From " + paramFrom;
         } else {
