@@ -4,11 +4,9 @@
     <title>Gift</title>
 </head>
 <body>
-    <div id="message">
-        <p style = "font-family:georgia,garamond,serif;font-size:25px;font-style:bold;">
-            You got a gift from Rey!
-        </p>
-        <p style = "font-family:georgia,garamond,serif;font-size:19px;font-style:italic;color: gray;">
+    <div id="message_container">
+        <p id="message_from" class="message" style=";font-size:25px; font-style: bold;"></p>
+        <p class="message" style="font-size:19px; color: gray;">
             Click it to open
         </p>
     </div>
@@ -18,7 +16,7 @@
             <img id="chest_state" class="treasure_element"/>
             <img id="scroll"      class="treasure_element"/>
             <img id="chest_front" class="treasure_element"/>
-            </div>
+            <a id="chest_text" class="chest_text" style="position: relative; top: 248px;"></a>
         </div>
     </div>
 </body>
@@ -42,12 +40,30 @@
     }
 
     function onLoad() {
+        // Setup message
+        var url = new URL(window.location.href);
+        var paramFrom = url.searchParams.get('from');
+        if (paramFrom) {
+            e("message_from").innerHTML  = "You received a gift from " + paramFrom + "!";
+        } else {
+            e("message_from").innerHTML  = "You received a gift!";
+        }
+
+        var paramTo = url.searchParams.get('to');
+        if (paramTo) {
+            e("chest_text").innerHTML = "Allan"
+        } else if (paramFrom) {
+            e("chest_text").innerHTML = "From " + paramFrom;
+        } else {
+            e("chest_text").innerHTML = ""
+        }
+
         // Setup treasure
         e("chest_state").src = img(chest_closed);
         e("chest_front").src = img(chest_front);
         e("scroll").style.display = "none";
         e("scroll").src = img(scroll);
-        e("treasure").style.display = "inline-block"
+        e("treasure").style.display = "inline-block";
     }
 
     function onClickChest() {
@@ -60,10 +76,27 @@
 
 
 <style>
-    #message {
+    body {
+        background: url('graphics/bg.jpg') no-repeat center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    #message_container {
         text-align: center;
         margin-top: 60px;
         margin-bottom: 90px;
+    }
+
+    .message {
+        font-family:Comic Sans MS, cursive, sans-serif;
+    }
+
+    .chest_text {
+        font-family:Papyrus;
+        color: gold;
     }
 
     #treasure {
