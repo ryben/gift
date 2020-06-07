@@ -44,7 +44,7 @@
         'ch_closed' : "chest_closed.png",
         'ch_opened' : "chest_opened.png",
         'ch_front' : "chest_front.png",
-        'scroll' : "scroll.png",
+        'scroll' : "scroll.png"
     }
 
     function img(img_code) { // get image full path
@@ -60,9 +60,9 @@
         var paramCreate = url.searchParams.get('create');
 
         // Preload images
-        for (let img in Object.values(images)) {
-            new Image().url = img;
-        }
+        Object.keys(images).forEach(function(imgKey) {
+            new Image().src=img(imgKey);
+        })
 
         if (paramCreate != null) { // If creating gift
             e("edit_module_container").style.display = "block";
