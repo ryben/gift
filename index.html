@@ -9,9 +9,10 @@
         <div id="edit_module" style="text-align: left; display: inline-block;">
             From <input id="edit_gift_from" class="edit_module_input" type="text"/><br/>
             To <input id="edit_gift_to" class="edit_module_input" type="text"/><br/>
+            Gift <textarea id="edit_gift_text" class="edit_module_input" rows=2 type="text"></textarea><br/>
             <button onclick="onClickGenerate()" style="margin-top :20px;" class="edit_module_button">Generate link</button><br/>
-            <textarea id="edit_gift_link" class="edit_module_input default_hide" style="resize: none;"/></textarea><br/>
-            <a id="edit_gift_link_test" class="clickable_text default_hide" style="text-align: center;" onclick="onClickTry()">Try it</a>
+            <textarea id="edit_gift_link" class="edit_module_input default_hide" rows=5 style="resize: none;"/></textarea><br/>
+            <a id="edit_gift_link_test" class="clickable_text default_hide" style="text-align: center; margin-top: -15px;" onclick="onClickTry()">Try it</a>
         </div>
     </div>
 
@@ -92,6 +93,11 @@
         return url.searchParams.get('to');
     }
 
+    function getGiftText() {
+        var url = new URL(window.location.href);
+        return url.searchParams.get('gift');
+    }
+
     function loadMessage() {
         if (getParamFrom()) {
             e("message_from").innerHTML  = "You received a gift from " + getParamFrom() + "!";
@@ -105,6 +111,11 @@
             e("chest_text").innerHTML = "From " + getParamFrom();
         } else {
             e("chest_text").innerHTML = ""
+        }
+
+        var gift_text = getGiftText();
+        if (gift_text) {
+            e("scroll_text").innerHTML = gift_text.replace("\n", "<br/>");
         }
 
         show("message_container");
@@ -163,12 +174,16 @@
 
         let from = e("edit_gift_from").value;
         let to = e("edit_gift_to").value;
+        let gift = e("edit_gift_text").value;
 
         if (from) {
             params['from'] = from;
         }
         if (to) {
             params['to'] = to;
+        }
+        if (gift) {
+            params['gift'] = gift
         }
 
         let encodedParams = encodeQuery(params);
