@@ -40,13 +40,15 @@
     window.onload = onLoad;
 
     var graphics_folder = "graphics/";
-    var chest_closed = "chest_closed.png";
-    var chest_opened = "chest_opened.png";
-    var chest_front = "chest_front.png";
-    var scroll = "scroll.png";
+    var images = {
+        'ch_closed' : "chest_closed.png",
+        'ch_opened' : "chest_opened.png",
+        'ch_front' : "chest_front.png",
+        'scroll' : "scroll.png",
+    }
 
-    function img(filename) { // get image full path
-        return graphics_folder + filename;
+    function img(img_code) { // get image full path
+        return graphics_folder + images[img_code];
     }
 
     function e(id) { // get element by id
@@ -56,6 +58,11 @@
     function onLoad() {
         var url = new URL(window.location.href);
         var paramCreate = url.searchParams.get('create');
+
+        // Preload images
+        for (let img in Object.values(images)) {
+            new Image().url = img;
+        }
 
         if (paramCreate != null) { // If creating gift
             e("edit_module_container").style.display = "block";
@@ -104,10 +111,10 @@
     }
 
     function loadTreasure() {
-        e("chest_state").src = img(chest_closed);
-        e("chest_front").src = img(chest_front);
+        e("chest_state").src = img('ch_closed');
+        e("chest_front").src = img('ch_front');
         e("scroll").style.display = "none";
-        e("scroll").src = img(scroll);
+        e("scroll").src = img('scroll');
         e("treasure").style.display = "inline-block";
 
         show("treasure_container");
@@ -122,7 +129,7 @@
     }
 
     function onClickChest() {
-        e("chest_state").src = img(chest_opened);
+        e("chest_state").src = img('ch_opened');
         e("scroll").style.display = "inline";
         e("scroll").style.transitionDuration = "2s";
         e("scroll").classList.add("translateUp");
