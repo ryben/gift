@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Gift</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 </head>
 <body class="message">
     <div id="edit_module_container" class="hideDuringLoad center_children" style="text-align: center;">
@@ -154,7 +155,7 @@
 
         var createGiftParam = getBaseLocation() + "?" + encodeQuery(params);
 
-        window.location.replace(createGiftParam);
+        window.location.href = createGiftParam;
     }
 
 
