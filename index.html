@@ -129,12 +129,13 @@
     }
 
     function onClickChest() {
+        e("chest_state").addEventListener('load', () => {
+            e("scroll").style.display = "inline";
+            e("scroll").style.transitionDuration = "2s";
+            e("scroll").classList.add("translateUp");
+        })
         e("chest_state").src = img('ch_opened');
-        e("scroll").style.display = "inline";
-        e("scroll").style.transitionDuration = "2s";
-        e("scroll").classList.add("translateUp");
     }
-
 
     function getBaseLocation() {
         return window.location.protocol + '//' + window.location.host + window.location.pathname;
