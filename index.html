@@ -22,9 +22,13 @@
 
     <div id="treasure_container" class="default_hide center_children">
         <div id="treasure" class="hideDuringLoad clickable" onclick="onClickChest()">
-            <img id="chest_state" class="treasure_element"/>
-            <img id="scroll"      class="treasure_element"/>
-            <img id="chest_front" class="treasure_element"/>
+            <img id="chest_opened" class="treasure_element default_hide"/>
+            <img id="chest_closed" class="treasure_element"/>
+            <div id="scroll_container" class="default_hide treasure_element">
+                <img id="scroll" class="treasure_element"/>
+                <a   id="scroll_text" class="message" style="position: relative; top: 190px; font-size: 20px; color: #373737; text-shadow: 0px 0px 1px #6A6A6A;">Friendship</a>
+            </div>
+            <img id="chest_front"  class="treasure_element"/>
             <a id="chest_text" class="chest_text" style="position: relative; top: 248px;"></a>
         </div>
     </div>
@@ -44,8 +48,8 @@
     var images = {
         'ch_closed' : "chest_closed.png",
         'ch_opened' : "chest_opened.png",
-        'ch_front' : "chest_front.png",
-        'scroll' : "scroll.png"
+        'ch_front'  : "chest_front.png",
+        'scroll'    : "scroll.png"
     }
 
     function img(img_code) { // get image full path
@@ -59,11 +63,6 @@
     function onLoad() {
         var url = new URL(window.location.href);
         var paramCreate = url.searchParams.get('create');
-
-        // Preload images
-        Object.keys(images).forEach(function(imgKey) {
-            new Image().src=img(imgKey);
-        })
 
         if (paramCreate != null) { // If creating gift
             e("edit_module_container").style.display = "block";
@@ -112,9 +111,9 @@
     }
 
     function loadTreasure() {
-        e("chest_state").src = img('ch_closed');
+        e("chest_opened").src = img('ch_opened');
+        e("chest_closed").src = img('ch_closed');
         e("chest_front").src = img('ch_front');
-        e("scroll").style.display = "none";
         e("scroll").src = img('scroll');
         e("treasure").style.display = "inline-block";
 
@@ -130,12 +129,12 @@
     }
 
     function onClickChest() {
-        e("chest_state").addEventListener('load', () => {
-            e("scroll").style.display = "inline";
-            e("scroll").style.transitionDuration = "2s";
-            e("scroll").classList.add("translateUp");
-        })
-        e("chest_state").src = img('ch_opened');
+        e("chest_closed").style.display = "none";
+        e("chest_opened").style.display = "block";
+
+        e("scroll_container").style.display = "inline";
+        e("scroll_container").style.transitionDuration = "2s";
+        e("scroll_container").classList.add("translateUp");
     }
 
     function getBaseLocation() {
@@ -281,8 +280,7 @@
         background-color: white;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         margin: 50px;
-        min-width: 300px;
-        max-width: 500px;
+        width: 200px;
         padding: 30px;
         border-radius: 15px;
     }
