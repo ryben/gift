@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div id="footer" class="center_children" style="margin-top: 150px;">
+    <div id="footer" class="center_children" style="margin-top: 120px;">
         <a id="create_gift" class="clickable_text message create_gift default_hide" style="color: darkblue;" onclick="onClickCreateGift()">Create your own gift</a>
     </div>
 
@@ -151,9 +151,25 @@
 
 
     function onClickGenerate() {
-        const params = { "from": e("edit_gift_from").value, "to": e("edit_gift_to").value};
+        var params = {};
 
-        var giftLink = getBaseLocation() + "?" + encodeQuery(params);;
+        let from = e("edit_gift_from").value;
+        let to = e("edit_gift_to").value;
+
+        if (from) {
+            params['from'] = from;
+        }
+        if (to) {
+            params['to'] = to;
+        }
+
+        let encodedParams = encodeQuery(params);
+        var giftLink = getBaseLocation() + ""
+
+        if (encodedParams) {
+            giftLink += "?" + encodeQuery(params);;
+        }
+
         e("edit_gift_link").value = giftLink;
 
         show("edit_gift_link")
