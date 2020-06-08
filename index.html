@@ -9,7 +9,7 @@
         <div id="edit_module" style="text-align: left; display: inline-block;">
             From <input id="edit_gift_from" class="edit_module_input" type="text"/><br/>
             To <input id="edit_gift_to" class="edit_module_input" type="text"/><br/>
-            Gift <textarea id="edit_gift_text" class="edit_module_input" rows=2 type="text">Friendship</textarea><br/>
+            Gift <textarea id="edit_gift_text" class="edit_module_input" rows=2 type="text" style="resize: none;">Friendship</textarea><br/>
             <button onclick="onClickGenerate()" style="margin-top :20px;" class="edit_module_button">Generate link</button><br/>
             <textarea id="edit_gift_link" class="edit_module_input default_hide" rows=5 style="resize: none;"/></textarea><br/>
             <a id="edit_gift_link_test" class="clickable_text default_hide" style="text-align: center; margin-top: -15px;" onclick="onClickTry()">Try it</a>
@@ -95,11 +95,35 @@
 
     function getGiftText() {
         var url = new URL(window.location.href);
-        return reverse(url.searchParams.get('g'));
+        return decrypt(url.searchParams.get('g'));
     }
 
-    function reverse(text) {
-        return text ? text.split("").reverse().join("") : "";
+    function encrypt(text) {
+        if (!text) return "";
+
+        var lowercaseExp = /[a-z]/;
+        var uppercaseExp = /[A-Z]/;
+        var result = "";
+        text.split("").forEach(function rotate(letter) {
+            if (lowercaseExp.test(letter)) {
+                result += rotateLetter(letter, true);
+            } else if (uppercaseExp.test(letter)) {
+                result += rotateLetter(letter, false);
+            } else {
+                result += letter;
+            }
+        });
+        return result;
+    }
+
+    function rotateLetter(letter, isLowercase) {
+        let baseLetter = isLowercase ? 'a' : 'A';
+        let newCharCode = baseLetter.charCodeAt(0) + (letter.charCodeAt(0) + 13 - baseLetter.charCodeAt(0)) % 26;
+        return String.fromCharCode(newCharCode);
+    }
+
+    function decrypt(text) {
+        return encrypt(text);
     }
 
     function loadMessage() {
@@ -191,7 +215,7 @@
         }
         var default_gift = "Friendship";
         if (gift && gift != default_gift) {
-            params['g'] = reverse(gift);
+            params['g'] = encrypt(gift);
         }
 
         let encodedParams = encodeQuery(params);
@@ -208,7 +232,7 @@
     }
 
     function onClickTry() {
-        window.open(e("edit_gift_link").value);
+        window.location.href = e("edit_gift_link").value;
     }
 
     function encodeQuery(params) {
